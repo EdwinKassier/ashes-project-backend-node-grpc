@@ -34,7 +34,7 @@ export class GrpcServer {
    * Register the CryptoAnalysisService handlers.
    */
   registerAnalysisService(handler: AnalysisHandler): void {
-    const protoPath = path.resolve(__dirname, '../../proto/api/v1/analysis.proto');
+    const protoPath = path.resolve(__dirname, '../../proto/ashes/api/v1/analysis.proto');
 
     const packageDefinition = protoLoader.loadSync(protoPath, PROTO_OPTIONS);
     const protoDescriptor = grpc.loadPackageDefinition(packageDefinition) as unknown as {
@@ -65,47 +65,6 @@ export class GrpcServer {
     });
 
     logger.info('Registered CryptoAnalysisService');
-  }
-
-  /**
-   * Register gRPC Health Checking Protocol.
-   */
-  registerHealthCheck(): void {
-    const healthProtoPath = path.resolve(__dirname, '../../proto/health/v1/health.proto');
-
-    // Check if health proto exists, if not use embedded implementation
-    try {
-      const packageDefinition = protoLoader.loadSync(healthProtoPath, PROTO_OPTIONS);
-      const protoDescriptor = grpc.loadPackageDefinition(packageDefinition) as unknown as {
-        grpc: {
-          health: {
-            v1: {
-              Health: grpc.ServiceClientConstructor;
-            };
-          };
-        };
-      };
-
-      const service = protoDescriptor.grpc.health.v1.Health.service;
-
-      this.server.addService(service, {
-        check: (
-          _call: grpc.ServerUnaryCall<{ service: string }, { status: number }>,
-          callback: grpc.sendUnaryData<{ status: number }>
-        ) => {
-          // SERVING = 1
-          callback(null, { status: 1 });
-        },
-        watch: (call: grpc.ServerWritableStream<{ service: string }, { status: number }>) => {
-          // Send initial status and keep connection open
-          call.write({ status: 1 });
-        },
-      });
-
-      logger.info('Registered Health Check service');
-    } catch {
-      logger.warn('Health proto not found, skipping health check registration');
-    }
   }
 
   /**

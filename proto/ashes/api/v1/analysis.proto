@@ -9,7 +9,7 @@ service CryptoAnalysisService {
   rpc Analyze(AnalyzeRequest) returns (AnalyzeResponse);
 
   // GetPriceHistory returns historical price data for charting.
-  rpc GetPriceHistory(PriceHistoryRequest) returns (PriceHistoryResponse);
+  rpc GetPriceHistory(GetPriceHistoryRequest) returns (GetPriceHistoryResponse);
 }
 
 // AnalyzeRequest contains the parameters for investment analysis.
@@ -44,14 +44,14 @@ message InvestmentResult {
   string generation_date = 7;
 }
 
-// PriceHistoryRequest contains parameters for fetching price history.
-message PriceHistoryRequest {
+// GetPriceHistoryRequest contains parameters for fetching price history.
+message GetPriceHistoryRequest {
   // Crypto symbol (e.g., "ETH", "BTC").
   string symbol = 1;
 }
 
-// PriceHistoryResponse contains historical price data points.
-message PriceHistoryResponse {
+// GetPriceHistoryResponse contains historical price data points.
+message GetPriceHistoryResponse {
   // List of price points over time.
   repeated PricePoint points = 1;
 }

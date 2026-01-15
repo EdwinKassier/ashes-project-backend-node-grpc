@@ -34,14 +34,14 @@ interface AnalyzeResponse {
 /**
  * Request type for GetPriceHistory RPC.
  */
-interface PriceHistoryRequest {
+interface GetPriceHistoryRequest {
   symbol: string;
 }
 
 /**
  * Response type for GetPriceHistory RPC.
  */
-interface PriceHistoryResponse {
+interface GetPriceHistoryResponse {
   points: {
     timestamp: string;
     price: number;
@@ -111,8 +111,8 @@ export class AnalysisHandler {
    * Handle GetPriceHistory RPC call.
    */
   getPriceHistory = async (
-    call: ServerUnaryCall<PriceHistoryRequest, PriceHistoryResponse>,
-    callback: sendUnaryData<PriceHistoryResponse>
+    call: ServerUnaryCall<GetPriceHistoryRequest, GetPriceHistoryResponse>,
+    callback: sendUnaryData<GetPriceHistoryResponse>
   ): Promise<void> => {
     const { symbol } = call.request;
 
@@ -125,7 +125,7 @@ export class AnalysisHandler {
 
       const priceHistory = await this.analysisService.getPriceHistory(symbol.toUpperCase());
 
-      const response: PriceHistoryResponse = {
+      const response: GetPriceHistoryResponse = {
         points: priceHistory.map((point) => ({
           timestamp: point.timestamp.toISOString(),
           price: point.price,

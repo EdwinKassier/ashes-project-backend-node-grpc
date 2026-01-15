@@ -30,7 +30,6 @@ async function main(): Promise<void> {
   // Initialize and configure gRPC server
   const server = new GrpcServer();
   server.registerAnalysisService(analysisHandler);
-  server.registerHealthCheck();
 
   // Setup graceful shutdown
   const shutdown = async (signal: string): Promise<void> => {

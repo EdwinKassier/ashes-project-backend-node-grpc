@@ -2,7 +2,7 @@ version: v2
 name: buf.build/ashes-project/grpc-service
 lint:
   use:
-    - DEFAULT
+    - STANDARD
     - COMMENTS
   except:
     - PACKAGE_VERSION_SUFFIX

@@ -1,9 +1,43 @@
-version: '3'
 services:
-  node-app:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: ashes-grpc-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ashes_grpc
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # gRPC Service
+  grpc-service:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: "always"
-    volumes:
-      - .:/app  # Mount the current directory to /app in the container
+    container_name: ashes-grpc-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
+      PORT: 50051
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ashes_grpc?schema=public
+      KRAKEN_URL: https://api.kraken.com/0/public
+      KRAKEN_TIMEOUT: 10000
+      LOG_LEVEL: info
+      NODE_ENV: production
+    ports:
+      - "50051:50051"
+
+volumes:
+  postgres_data:

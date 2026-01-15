@@ -1,0 +1,11 @@
+version: v2
+name: buf.build/ashes-project/grpc-service
+lint:
+  use:
+    - DEFAULT
+    - COMMENTS
+  except:
+    - PACKAGE_VERSION_SUFFIX
+breaking:
+  use:
+    - FILE

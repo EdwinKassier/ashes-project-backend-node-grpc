@@ -1,5 +1,40 @@
-.idea/
+# Dependencies
 node_modules/
-node_modules
-build/
-src/proto/
+pnpm-lock.yaml
+
+# Build output
+dist/
+
+# Generated code
+src/generated/
+
+# Database
+*.db
+*.db-journal
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# Prisma
+prisma/migrations/.migration_lock.toml

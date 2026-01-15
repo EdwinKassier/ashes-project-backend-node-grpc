@@ -1,33 +1,57 @@
 {
-  "name": "grpc-starter",
+  "name": "ashes-grpc-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Production-ready gRPC service with Clean Architecture and DDD",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "nodemon src/server/index.js --watch src/server",
-    "start:client": "nodemon src/client/index.ts --watch src/client",
-    "proto:build": "cd proto; buf build; cd ..",
-    "codegen:buf": "cd proto; buf generate; cd .."
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "proto:gen": "cd proto && buf generate",
+    "proto:lint": "cd proto && buf lint",
+    "proto:breaking": "cd proto && buf breaking --against '.git#branch=main'",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "typecheck": "tsc --noEmit"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "grpc",
+    "typescript",
+    "clean-architecture",
+    "ddd"
+  ],
+  "author": "Ashes Project",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
-    "@types/node": "^16.9.4",
-    "nodemon": "^2.0.12",
-    "prettier": "^2.4.1",
-    "typescript": "^4.4.3"
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "prisma": "^6.2.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.3.7",
-    "@grpc/proto-loader": "^0.7.10",
-    "ts-node": "^10.9.1",
-    "@prisma/client": "5.3.1",
-    "@sentry/sveltekit": "^7.59.2",
-    "data-forge": "^1.10.1",
-    "firebase": "^10.1.0",
-    "node-fetch": "^3.3.2",
-    "prisma": "^5.3.1"
+    "@grpc/grpc-js": "^1.12.5",
+    "@grpc/proto-loader": "^0.7.13",
+    "@prisma/client": "^6.2.1",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "zod": "^3.24.1"
   }
 }

@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Query logging for analytics
+model QueryLog {
+  id             String   @id @default(cuid())
+  symbol         String
+  investment     Float
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([symbol])
+  @@index([createdAt])
+  @@map("query_logs")
+}
+
+/// Cached opening average prices for symbols
+model OpeningAverage {
+  id             String   @id @default(cuid())
+  symbol         String   @unique
+  average        Float
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@map("opening_averages")
+}
+
+/// Cached investment analysis results
+model AnalysisResult {
+  id             String   @id @default(cuid())
+  symbol         String
+  investment     Float
+  numberOfCoins  Float    @map("number_of_coins")
+  profit         Float
+  growthFactor   Float    @map("growth_factor")
+  lambos         Float
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@unique([symbol, investment])
+  @@index([symbol])
+  @@map("analysis_results")
+}

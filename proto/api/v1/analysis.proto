@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package ashes.api.v1;
+
+// CryptoAnalysisService provides cryptocurrency investment analysis.
+// This service calculates hypothetical returns for historical investments.
+service CryptoAnalysisService {
+  // Analyze calculates profit/loss for a hypothetical historical investment.
+  rpc Analyze(AnalyzeRequest) returns (AnalyzeResponse);
+
+  // GetPriceHistory returns historical price data for charting.
+  rpc GetPriceHistory(PriceHistoryRequest) returns (PriceHistoryResponse);
+}
+
+// AnalyzeRequest contains the parameters for investment analysis.
+message AnalyzeRequest {
+  // Crypto symbol (e.g., "ETH", "BTC").
+  string symbol = 1;
+  // Investment amount in USD.
+  double investment = 2;
+}
+
+// AnalyzeResponse contains the result of the investment analysis.
+message AnalyzeResponse {
+  // The calculated investment result.
+  InvestmentResult result = 1;
+}
+
+// InvestmentResult represents the outcome of a hypothetical investment.
+message InvestmentResult {
+  // The cryptocurrency symbol.
+  string symbol = 1;
+  // The initial investment amount in USD.
+  double investment = 2;
+  // Number of coins that would have been purchased.
+  double number_of_coins = 3;
+  // Profit or loss in USD.
+  double profit = 4;
+  // Growth factor (profit / investment).
+  double growth_factor = 5;
+  // Number of Lamborghinis purchasable with profit (at $200,000 each).
+  double lambos = 6;
+  // ISO 8601 timestamp when the result was generated.
+  string generation_date = 7;
+}
+
+// PriceHistoryRequest contains parameters for fetching price history.
+message PriceHistoryRequest {
+  // Crypto symbol (e.g., "ETH", "BTC").
+  string symbol = 1;
+}
+
+// PriceHistoryResponse contains historical price data points.
+message PriceHistoryResponse {
+  // List of price points over time.
+  repeated PricePoint points = 1;
+}
+
+// PricePoint represents a single price at a point in time.
+message PricePoint {
+  // ISO 8601 timestamp.
+  string timestamp = 1;
+  // Price in USD.
+  double price = 2;
+}

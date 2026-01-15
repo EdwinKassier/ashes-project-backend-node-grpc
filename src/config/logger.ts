@@ -5,22 +5,22 @@ import { settings } from './settings.js';
  * Build Pino logger options based on environment.
  */
 function buildLoggerOptions(): pino.LoggerOptions {
-    const options: pino.LoggerOptions = {
-        level: settings.log.level,
+  const options: pino.LoggerOptions = {
+    level: settings.log.level,
+  };
+
+  if (process.env.NODE_ENV !== 'production') {
+    options.transport = {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'SYS:standard',
+        ignore: 'pid,hostname',
+      },
     };
+  }
 
-    if (process.env['NODE_ENV'] !== 'production') {
-        options.transport = {
-            target: 'pino-pretty',
-            options: {
-                colorize: true,
-                translateTime: 'SYS:standard',
-                ignore: 'pid,hostname',
-            },
-        };
-    }
-
-    return options;
+  return options;
 }
 
 /**
@@ -33,5 +33,5 @@ export const logger = pino(buildLoggerOptions());
  * Create a child logger with additional context.
  */
 export function createLogger(context: Record<string, unknown>): pino.Logger {
-    return logger.child(context);
+  return logger.child(context);
 }

@@ -9,15 +9,10 @@ let prismaClient: PrismaClient | null = null;
  * Creates a new instance if one doesn't exist.
  */
 export function getPrismaClient(): PrismaClient {
-    if (!prismaClient) {
-        prismaClient = new PrismaClient({
-            log:
-                settings.log.level === 'debug'
-                    ? ['query', 'info', 'warn', 'error']
-                    : ['error'],
-        });
-    }
-    return prismaClient;
+  prismaClient ??= new PrismaClient({
+    log: settings.log.level === 'debug' ? ['query', 'info', 'warn', 'error'] : ['error'],
+  });
+  return prismaClient;
 }
 
 /**
@@ -25,9 +20,9 @@ export function getPrismaClient(): PrismaClient {
  * Should be called during graceful shutdown.
  */
 export async function disconnectPrisma(): Promise<void> {
-    if (prismaClient) {
-        await prismaClient.$disconnect();
-        prismaClient = null;
-        logger.info('Disconnected from database');
-    }
+  if (prismaClient) {
+    await prismaClient.$disconnect();
+    prismaClient = null;
+    logger.info('Disconnected from database');
+  }
 }

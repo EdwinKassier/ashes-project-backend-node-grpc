@@ -1,7 +1,7 @@
 export {
-    DomainError,
-    SymbolNotFoundError,
-    ValidationError,
-    ExternalServiceError,
-    CacheNotFoundError,
+  DomainError,
+  SymbolNotFoundError,
+  ValidationError,
+  ExternalServiceError,
+  CacheNotFoundError,
 } from './domain-errors.js';

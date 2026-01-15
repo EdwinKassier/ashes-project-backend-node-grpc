@@ -8,79 +8,76 @@ import { logger } from '../../config/logger.js';
  * This adapter translates between domain entities and database models.
  */
 export class AnalysisRepository implements IAnalysisRepository {
-    constructor(private readonly prisma: PrismaClient) { }
+  constructor(private readonly prisma: PrismaClient) {}
 
-    async findCachedResult(
-        symbol: string,
-        investment: number
-    ): Promise<InvestmentResult | null> {
-        const result = await this.prisma.analysisResult.findUnique({
-            where: {
-                symbol_investment: { symbol, investment },
-            },
-        });
+  async findCachedResult(symbol: string, investment: number): Promise<InvestmentResult | null> {
+    const result = await this.prisma.analysisResult.findUnique({
+      where: {
+        symbol_investment: { symbol, investment },
+      },
+    });
 
-        if (!result) {
-            return null;
-        }
-
-        return new InvestmentResult(
-            result.symbol,
-            result.investment,
-            result.numberOfCoins,
-            result.profit,
-            result.growthFactor,
-            result.lambos,
-            result.createdAt
-        );
+    if (!result) {
+      return null;
     }
 
-    async saveResult(result: InvestmentResult): Promise<void> {
-        await this.prisma.analysisResult.upsert({
-            where: {
-                symbol_investment: {
-                    symbol: result.symbol,
-                    investment: result.investment,
-                },
-            },
-            update: {
-                numberOfCoins: result.numberOfCoins,
-                profit: result.profit,
-                growthFactor: result.growthFactor,
-                lambos: result.lambos,
-            },
-            create: {
-                symbol: result.symbol,
-                investment: result.investment,
-                numberOfCoins: result.numberOfCoins,
-                profit: result.profit,
-                growthFactor: result.growthFactor,
-                lambos: result.lambos,
-            },
-        });
-        logger.debug({ symbol: result.symbol, investment: result.investment }, 'Saved analysis result');
-    }
+    return new InvestmentResult(
+      result.symbol,
+      result.investment,
+      result.numberOfCoins,
+      result.profit,
+      result.growthFactor,
+      result.lambos,
+      result.createdAt
+    );
+  }
 
-    async findOpeningAverage(symbol: string): Promise<number | null> {
-        const result = await this.prisma.openingAverage.findUnique({
-            where: { symbol },
-        });
-        return result?.average ?? null;
-    }
+  async saveResult(result: InvestmentResult): Promise<void> {
+    await this.prisma.analysisResult.upsert({
+      where: {
+        symbol_investment: {
+          symbol: result.symbol,
+          investment: result.investment,
+        },
+      },
+      update: {
+        numberOfCoins: result.numberOfCoins,
+        profit: result.profit,
+        growthFactor: result.growthFactor,
+        lambos: result.lambos,
+      },
+      create: {
+        symbol: result.symbol,
+        investment: result.investment,
+        numberOfCoins: result.numberOfCoins,
+        profit: result.profit,
+        growthFactor: result.growthFactor,
+        lambos: result.lambos,
+      },
+    });
+    logger.debug({ symbol: result.symbol, investment: result.investment }, 'Saved analysis result');
+  }
 
-    async saveOpeningAverage(symbol: string, average: number): Promise<void> {
-        await this.prisma.openingAverage.upsert({
-            where: { symbol },
-            update: { average },
-            create: { symbol, average },
-        });
-        logger.debug({ symbol, average }, 'Saved opening average');
-    }
+  async findOpeningAverage(symbol: string): Promise<number | null> {
+    const result = await this.prisma.openingAverage.findUnique({
+      where: { symbol },
+    });
+    return result?.average ?? null;
+  }
 
-    async logQuery(symbol: string, investment: number): Promise<void> {
-        await this.prisma.queryLog.create({
-            data: { symbol, investment },
-        });
-        logger.debug({ symbol, investment }, 'Logged query');
-    }
+  async saveOpeningAverage(symbol: string, average: number): Promise<void> {
+    await this.prisma.openingAverage.upsert({
+      where: { symbol },
+      update: { average },
+      create: { symbol, average },
+    });
+    logger.debug({ symbol, average }, 'Saved opening average');
+  }
+
+  async logQuery(symbol: string, investment: number): Promise<void> {
+    await this.prisma.queryLog.create({
+      data: { symbol, investment },
+    });
+    logger.debug({ symbol, investment }, 'Logged query');
+  }
 }
